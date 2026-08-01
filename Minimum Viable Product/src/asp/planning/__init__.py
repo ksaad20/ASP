@@ -1,11 +1,12 @@
 """
-Planning package for ASP.
+Planning module for the Autonomous Synthesis Planner (ASP).
+
+This package exposes the primary planning interfaces used
+throughout the project.
 """
 
 from __future__ import annotations
 
-from .engine import PlanningEngine
-from .optimizer import RouteOptimizer
 from .planner import Planner
 from .result import PlanningResult
 from .retrosynthesis import RetrosynthesisEngine
@@ -16,11 +17,9 @@ from .search import SearchNode, SearchTree
 __all__ = [
     "Planner",
     "PlanningResult",
-    "PlanningEngine",
     "RetrosynthesisEngine",
     "Route",
     "RouteScorer",
-    "RouteOptimizer",
     "SearchNode",
     "SearchTree",
 ]
