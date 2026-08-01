@@ -12,6 +12,8 @@ from asp.planning import (
     RouteScorer,
 )
 
+# nosec B101
+
 
 class MockReaction:
     """
