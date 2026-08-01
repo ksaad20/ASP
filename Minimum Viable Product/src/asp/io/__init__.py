@@ -1,4 +1,3 @@
-```python id="s7mdkp"
 """
 Input/Output package for Autonomous Synthesis Planner.
 
@@ -25,5 +24,3 @@ __all__ = [
     "DataImporter",
     "DataExporter",
 ]
-```
-
