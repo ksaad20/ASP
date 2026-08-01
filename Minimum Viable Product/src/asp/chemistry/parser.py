@@ -1,8 +1,3 @@
-```python
-"""
-SMILES parsing utilities for Autonomous Synthesis Planner.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass
