@@ -1,4 +1,3 @@
-```python id="9y0c4t"
 """
 General helper utilities for Autonomous Synthesis Planner.
 
@@ -179,5 +178,4 @@ __all__ = [
     "normalize",
     "safe_filename",
 ]
-```
 
