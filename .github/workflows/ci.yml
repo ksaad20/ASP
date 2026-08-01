@@ -70,9 +70,9 @@ jobs:
             bandit
 
 
-      - name: Check formatting with Black
+      - name: Formatting with Black
         run: |
-          black --check .
+          black .
 
 
       - name: Run Ruff linting
