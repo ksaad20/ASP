@@ -48,3 +48,9 @@ def plan(target: str) -> Planner:
     planner = Planner()
     planner.target = target
     return planner
+
+def plan(self, target: str) -> Planner:
+    return plan(target)
+
+def load_templates(self, path):
+    self.template_count += 1
