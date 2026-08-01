@@ -1,4 +1,3 @@
-```python
 """
 Public API for Autonomous Synthesis Planner.
 
@@ -137,5 +136,4 @@ __all__ = [
     "ASP",
     "plan",
 ]
-```
 
