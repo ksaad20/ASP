@@ -64,8 +64,9 @@ class MoleculeParser:
         bool
             True if valid.
         """
-        if not smiles.strip():
-            return False
+        if not smiles or not isinstance(smiles, str):
+            
+    raise ValueError("Invalid SMILES")
 
         if not _RDKIT_AVAILABLE:
             return True
