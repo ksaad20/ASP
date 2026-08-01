@@ -92,13 +92,14 @@ def from_reaction(
             "reaction": self.reaction.to_dict(),
             "metadata": self.metadata,
         }
+        
+    @classmethod
+    def from_reaction(
+        cls,
+        reaction: Reaction,
+        **kwargs: Any,
+        ) -> ReactionTemplate:
 
-@classmethod
-def from_reaction(
-    cls,
-    reaction: Reaction,
-    **kwargs: Any,
-) -> ReactionTemplate:
     """
     Create a template from a reaction.
     """
