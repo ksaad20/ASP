@@ -75,4 +75,27 @@ def plan(target: str) -> Planner:
 
     planner = Planner()
     planner.target = target
-    return planner
+    return planner.plan(target)
+
+def export(self, result: object, path: Path | str) -> object:
+    """
+    Export a planning result.
+
+    Parameters
+    ----------
+    result:
+        Planning result to export.
+
+    path:
+        Output file path.
+
+    Returns
+    -------
+    object
+        Export result from the exporter.
+    """
+
+    from asp.io.export import DataExporter
+
+    exporter = DataExporter()
+    return exporter.export(result, path)
