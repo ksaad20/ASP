@@ -54,6 +54,9 @@ dependencies = [
 
 
 [project.optional-dependencies]
+chemistry = [
+    "rdkit>=2024.3.5"
+]
 
 dev = [
     "pytest>=8.2",
