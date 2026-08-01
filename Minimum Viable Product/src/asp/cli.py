@@ -1,17 +1,3 @@
-"""
-Command-line interface for Autonomous Synthesis Planner.
-
-This module provides terminal commands for running synthesis planning,
-managing reaction templates, and exporting results.
-
-The CLI is built using Typer to provide a modern, developer-friendly
-command interface.
-"""
-
-"""
-ASP command line interface.
-"""
-
 from __future__ import annotations
 
 # ruff: noqa: B008
