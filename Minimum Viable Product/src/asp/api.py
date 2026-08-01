@@ -45,18 +45,6 @@ class ASP:
 
 
 def plan(target: str) -> Planner:
-    """
-    Generate a synthesis planner for a target molecule.
-
-    Parameters
-    ----------
-    target:
-        Target molecule representation.
-
-    Returns
-    -------
-    Planner
-        Planner instance for synthesis route generation.
-    """
-
-    return Planner(target)
+    planner = Planner()
+    planner.target = target
+    return planner
