@@ -12,24 +12,26 @@ class ReactionTemplate:
     Representation of a reusable reaction template.
     """
 
+    identifier: str
     reaction: Reaction
-    name: str = "unnamed"
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
-    def from_reaction(
-        cls,
-        reaction: Reaction,
-        **kwargs: Any,
-    ) -> ReactionTemplate:
-        """
-        Create a template from a reaction.
-        """
+def from_reaction(
+    cls,
+    reaction: Reaction,
+    identifier: str = "unnamed",
+    **kwargs: Any,
+) -> ReactionTemplate:
+    """
+    Create a template from a reaction.
+    """
 
-        return cls(
-            reaction=reaction,
-            metadata=kwargs,
-        )
+    return cls(
+        identifier=identifier,
+        reaction=reaction,
+        metadata=kwargs,
+    )
 
     def __post_init__(self) -> None:
         """Validate template fields."""
