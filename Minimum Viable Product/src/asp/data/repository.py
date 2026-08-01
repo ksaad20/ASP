@@ -1,4 +1,3 @@
-```python
 """
 Template repository for Autonomous Synthesis Planner.
 
@@ -165,5 +164,3 @@ class TemplateRepository:
             "TemplateRepository("
             f"templates={len(self)})"
         )
-```
-
