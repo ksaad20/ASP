@@ -1,10 +1,3 @@
-"""
-Molecular parsing utilities.
-
-This module provides the MoleculeParser responsible for converting
-external molecular representations into Molecule objects.
-"""
-
 from __future__ import annotations
 
 from pathlib import Path
