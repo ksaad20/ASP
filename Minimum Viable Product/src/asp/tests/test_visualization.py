@@ -1,4 +1,3 @@
-```python
 """
 Tests for ASP route visualization.
 
@@ -168,5 +167,4 @@ def test_visualizer_graph_property():
     )
 
     assert visualizer.graph is not None
-```
 
