@@ -59,11 +59,9 @@ class Route:
                 lambda: self.target,
             )(),
             "steps": [
-                getattr(
-                    step,
-                    "to_dict",
-                    lambda: step,
-                )()
+                step.to_dict()
+                if hasattr(step, "to_dict")
+                else step
                 for step in self.steps
             ],
             "score": self.score,
