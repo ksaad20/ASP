@@ -11,6 +11,8 @@ from typer.testing import CliRunner
 
 from asp.cli import app
 
+# nosec B101
+
 
 runner = CliRunner()
 
