@@ -1,10 +1,3 @@
-"""
-Chemistry module for the Autonomous Synthesis Planner (ASP).
-
-This package provides molecular representations, reaction
-representations, reaction templates, and parsing utilities.
-"""
-
 from __future__ import annotations
 
 from .molecule import Molecule
@@ -19,10 +12,10 @@ from .templates import ReactionTemplate
 
 __all__ = [
     "Molecule",
-    "ParsedMolecule",
     "MoleculeParser",
-    "parse_smiles",
-    "validate_smiles",
+    "ParsedMolecule",
     "Reaction",
     "ReactionTemplate",
+    "parse_smiles",
+    "validate_smiles",
 ]
