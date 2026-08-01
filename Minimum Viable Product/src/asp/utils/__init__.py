@@ -1,4 +1,3 @@
-```python id="r3j8xn"
 """
 Utility package for Autonomous Synthesis Planner.
 
@@ -44,5 +43,4 @@ __all__ = [
     "chunked",
     "unique",
 ]
-```
 
