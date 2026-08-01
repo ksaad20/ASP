@@ -1,5 +1,7 @@
 """
-Core planner implementation.
+Planner interface for the Autonomous Synthesis Planner (ASP).
+
+Provides the primary user-facing planning API.
 """
 
 from __future__ import annotations
@@ -7,110 +9,113 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from asp.chemistry import MoleculeParser, ParsedMolecule, ReactionTemplate
+from asp.chemistry import (
+    MoleculeParser,
+    ParsedMolecule,
+    ReactionTemplate,
+)
 
 from .result import PlanningResult
-from .route import Route
-from .search import SearchTree
+from .retrosynthesis import RetrosynthesisEngine
 
 
 class Planner:
     """
-    Autonomous synthesis planner.
+    High-level synthesis planner.
     """
 
     def __init__(
         self,
         *,
+        templates: list[ReactionTemplate] | None = None,
         max_routes: int = 20,
     ) -> None:
         """
         Initialize the planner.
         """
 
+        self.templates: list[ReactionTemplate] = templates or []
         self.max_routes = max_routes
-        self.templates: list[ReactionTemplate] = []
-        self.target: ParsedMolecule | None = None
+
+    @property
+    def template_count(self) -> int:
+        """
+        Number of registered templates.
+        """
+
+        return len(self.templates)
 
     def add_template(
         self,
         template: ReactionTemplate,
     ) -> None:
         """
-        Register a reaction template.
+        Register a template.
         """
 
         self.templates.append(template)
 
     def load_templates(
         self,
-        path: str | Path,
+        _: Path | str,
     ) -> None:
         """
-        Load templates from disk.
-
-        MVP placeholder implementation.
+        Placeholder template loader for the MVP.
         """
 
-        _ = Path(path)
+        return
+
+    def clear_templates(self) -> None:
+        """
+        Remove all registered templates.
+        """
+
+        self.templates.clear()
 
     def plan(
         self,
         target: str | ParsedMolecule,
     ) -> PlanningResult:
         """
-        Generate synthesis routes.
+        Plan a retrosynthetic route.
         """
 
-        if isinstance(target, ParsedMolecule):
-            molecule = target
-        else:
+        if isinstance(target, str):
             molecule = MoleculeParser.from_smiles(target)
+        else:
+            molecule = target
 
-        self.target = molecule
-
-        route = Route(target=molecule)
-        search_tree = SearchTree()
-
-        result = PlanningResult(
-            target=molecule,
-            routes=[route],
-            search_tree=search_tree,
-            expanded_nodes=1,
-            generated_routes=1,
-            elapsed_time=0.0,
+        engine = RetrosynthesisEngine(
+            templates=self.templates,
+            max_routes=self.max_routes,
         )
 
-        return result
+        return engine.plan(molecule)
 
-    @classmethod
-    def from_file(
-        cls,
-        path: str | Path,
-    ) -> "Planner":
+    def __call__(
+        self,
+        target: str | ParsedMolecule,
+    ) -> PlanningResult:
         """
-        Construct a planner from a template file.
+        Convenience wrapper.
         """
 
-        planner = cls()
-        planner.load_templates(path)
-        return planner
+        return self.plan(target)
 
     def __len__(self) -> int:
         """
-        Return the number of loaded templates.
+        Number of loaded templates.
         """
 
-        return len(self.templates)
+        return self.template_count
 
     def __repr__(self) -> str:
         """
-        Return a representation of the planner.
+        Planner representation.
         """
 
         return (
-            f"Planner("
-            f"templates={len(self.templates)}, "
-            f"max_routes={self.max_routes}"
-            f")"
+            "Planner("
+            f"templates={self.template_count}, "
+            f"max_routes={self.max_routes})"
         )
