@@ -1,4 +1,3 @@
-```python
 """
 Search infrastructure for Autonomous Synthesis Planner.
 
@@ -151,5 +150,3 @@ class SearchTree:
         Iterate depth-first.
         """
         return self.depth_first()
-```
-
