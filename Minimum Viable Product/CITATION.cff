@@ -1,0 +1,54 @@
+```yaml
+cff-version: 1.2.0
+
+title: "Autonomous Synthesis Planner"
+
+message: >
+  If you use Autonomous Synthesis Planner in your research,
+  please cite this software using the metadata below.
+
+type: software
+
+authors:
+  - family-names: "<Your Last Name>"
+    given-names: "<Your First Name>"
+    affiliation: "<Your Institution>"
+    orcid: "https://orcid.org/<ORCID>"
+
+repository-code: "https://github.com/<username>/autonomous-synthesis-planner"
+
+abstract: >
+  Autonomous Synthesis Planner is an open-source scientific software
+  framework for AI-powered autonomous chemical synthesis planning,
+  enabling retrosynthetic analysis, synthesis route generation,
+  optimization, and reproducible computational chemistry workflows.
+
+keywords:
+  - autonomous synthesis
+  - retrosynthesis
+  - cheminformatics
+  - computational chemistry
+  - reaction planning
+  - synthesis planning
+  - scientific software
+  - artificial intelligence
+
+license: Apache-2.0
+
+version: 0.1.0
+
+date-released: "2026-08-01"
+
+url: "https://github.com/<username>/autonomous-synthesis-planner"
+
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "<Your Last Name>"
+      given-names: "<Your First Name>"
+  title: "Autonomous Synthesis Planner"
+  version: "0.1.0"
+  year: 2026
+  url: "https://github.com/<username>/autonomous-synthesis-planner"
+```
+  
