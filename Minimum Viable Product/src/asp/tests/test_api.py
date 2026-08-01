@@ -1,4 +1,3 @@
-```python
 """
 Tests for the ASP public API.
 
@@ -103,5 +102,4 @@ def test_template_count_property():
         app.template_count,
         int,
     )
-```
 
