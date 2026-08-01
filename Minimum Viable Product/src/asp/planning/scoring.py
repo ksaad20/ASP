@@ -1,4 +1,3 @@
-```python
 """
 Route scoring for Autonomous Synthesis Planner.
 
@@ -142,5 +141,3 @@ class RouteScorer:
             return None
 
         return ranked[0]
-```
-
