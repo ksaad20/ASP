@@ -49,9 +49,6 @@ class MoleculeParser:
 
     @staticmethod
     def validate_smiles(smiles: str) -> bool:
-    """
-    Validate a SMILES string.
-    """
 
     if not smiles or not isinstance(smiles, str):
         raise ValueError("Invalid SMILES")
