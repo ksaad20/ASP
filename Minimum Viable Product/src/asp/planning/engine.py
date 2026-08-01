@@ -1,4 +1,3 @@
-```python
 """
 Planning engine for Autonomous Synthesis Planner.
 
@@ -125,5 +124,3 @@ class PlanningEngine:
         self.retrosynthesis.templates = list(
             templates
         )
-```
-
