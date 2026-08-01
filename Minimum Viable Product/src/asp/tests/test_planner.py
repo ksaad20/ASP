@@ -13,6 +13,8 @@ from asp.planning import (
     PlanningResult,
 )
 
+# nosec B101
+
 
 def test_planner_initialization():
     """
