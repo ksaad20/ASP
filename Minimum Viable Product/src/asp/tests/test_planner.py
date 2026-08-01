@@ -1,4 +1,3 @@
-```python
 """
 Tests for the ASP planning interface.
 
@@ -126,5 +125,4 @@ def test_planner_repr():
     )
 
     assert "Planner" in text
-```
 
