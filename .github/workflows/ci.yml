@@ -32,7 +32,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: MVP
+        working-directory: "Minimum Viable Product"
 
 
     steps:
@@ -57,7 +57,7 @@ jobs:
 
       - name: Install package
         run: |
-          pip install -e ./Minimum_Viable_Product 
+          pip install -e .
 
 
       - name: Install development dependencies
@@ -70,7 +70,7 @@ jobs:
             bandit
 
 
-      - name: Run Black formatter check
+      - name: Check formatting with Black
         run: |
           black --check .
 
@@ -87,7 +87,6 @@ jobs:
 
       - name: Run test suite
         run: |
-          MVP \
-            pytest \
-               --cov=asp \
-               --cov-report=term-missing
+          pytest \
+            --cov=asp \
+            --cov-report=term-missing
