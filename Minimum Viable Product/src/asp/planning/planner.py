@@ -1,4 +1,3 @@
-```python
 """
 High-level planning interface for Autonomous Synthesis Planner.
 
@@ -149,5 +148,3 @@ class Planner:
             f"max_routes={self.max_routes}"
             ")"
         )
-```
-
