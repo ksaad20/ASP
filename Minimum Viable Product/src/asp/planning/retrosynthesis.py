@@ -1,4 +1,3 @@
-```python
 """
 Retrosynthesis engine for Autonomous Synthesis Planner.
 
@@ -189,5 +188,3 @@ class RetrosynthesisEngine:
             for template in self.templates
             if template.enabled
         ]
-```
-  
