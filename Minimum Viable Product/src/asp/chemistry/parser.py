@@ -15,87 +15,79 @@ except ImportError:
 class ParsedMolecule:
     """
     Parsed molecular representation.
-
-    Attributes
-    ----------
-    smiles:
-        Original SMILES string.
-    valid:
-        Whether the SMILES is valid.
     """
 
     smiles: str
     valid: bool
 
 
+class MoleculeParser:
+    """
+    Parser for molecular representations.
+
+    Provides SMILES validation and parsing functionality.
+    """
+
+    def validate(self, smiles: str) -> bool:
+        """
+        Validate a SMILES string.
+
+        Parameters
+        ----------
+        smiles:
+            SMILES representation.
+
+        Returns
+        -------
+        bool
+            Whether the SMILES is valid.
+
+        Raises
+        ------
+        ValueError
+            If SMILES input is invalid.
+        """
+
+        if not smiles or not isinstance(smiles, str):
+            raise ValueError("Invalid SMILES")
+
+        if not _RDKIT_AVAILABLE:
+            return True
+
+        return Chem.MolFromSmiles(smiles) is not None
+
+    def parse(self, smiles: str) -> ParsedMolecule:
+        """
+        Parse a SMILES string.
+
+        Parameters
+        ----------
+        smiles:
+            SMILES representation.
+
+        Returns
+        -------
+        ParsedMolecule
+            Parsed molecule object.
+        """
+
+        return ParsedMolecule(
+            smiles=smiles,
+            valid=self.validate(smiles),
+        )
+
+
 def validate_smiles(smiles: str) -> bool:
     """
-    Validate a SMILES string.
-
-    Parameters
-    ----------
-    smiles:
-        SMILES representation.
-
-    Returns
-    -------
-    bool
-        True if valid.
-
-    Raises
-    ------
-    ValueError
-        If the input is empty or not a string.
+    Validate a SMILES string using MoleculeParser.
     """
 
-    if not smiles or not isinstance(smiles, str):
-        raise ValueError("Invalid SMILES")
-
-    if not _RDKIT_AVAILABLE:
-        return True
-
-    return Chem.MolFromSmiles(smiles) is not None
+    return MoleculeParser().validate(smiles)
 
 
 def parse_smiles(smiles: str) -> ParsedMolecule:
     """
-    Parse a SMILES string.
-
-    Parameters
-    ----------
-    smiles:
-        SMILES representation.
-
-    Returns
-    -------
-    ParsedMolecule
-        Parsed molecule object.
+    Parse a SMILES string using MoleculeParser.
     """
 
-    valid = validate_smiles(smiles)
-
-    return ParsedMolecule(
-        smiles=smiles,
-        valid=valid,
-    )
-
-
-def serialize_molecule(molecule: ParsedMolecule) -> dict[str, object]:
-    """
-    Serialize a parsed molecule.
-
-    Parameters
-    ----------
-    molecule:
-        Parsed molecule.
-
-    Returns
-    -------
-    dict
-        Serializable representation.
-    """
-
-    return {
-        "smiles": molecule.smiles,
-        "valid": molecule.valid,
-    }
+    return MoleculeParser().parse(smiles)
