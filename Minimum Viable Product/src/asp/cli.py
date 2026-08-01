@@ -12,13 +12,9 @@ command interface.
 ASP command line interface.
 """
 
-# ruff: noqa: B008
-
-from pathlib import Path
-
-import typer
-
 from __future__ import annotations
+
+# ruff: noqa: B008
 
 from pathlib import Path
 
