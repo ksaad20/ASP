@@ -1,5 +1,4 @@
-````markdown
-# Autonomous Synthesis Planner (ASP)
+Autonomous Synthesis Planner (ASP)
 
 <p align="center">
 
