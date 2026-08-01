@@ -1,4 +1,3 @@
-```python
 """
 Molecular parsing utilities.
 
@@ -134,5 +133,4 @@ class MoleculeParser:
         return format_name.lower() in {
             "smiles",
         }
-```
 
