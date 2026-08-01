@@ -1,0 +1,13 @@
+[bandit]
+# Directories excluded from security scanning.
+# Test files commonly use assert statements,
+# which Bandit flags but are standard pytest practice.
+
+exclude_dirs =
+    tests
+
+# Report severity levels.
+# Low issues are still shown for awareness.
+targets =
+    src
+
