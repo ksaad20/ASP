@@ -1,4 +1,3 @@
-```python
 """
 Command-line interface for Autonomous Synthesis Planner.
 
@@ -161,5 +160,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-```
-
