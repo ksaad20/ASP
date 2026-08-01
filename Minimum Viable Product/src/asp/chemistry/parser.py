@@ -56,15 +56,10 @@ class MoleculeParser:
 
     @staticmethod
     def validate_smiles(smiles: str) -> bool:
-        """
-        Validate a SMILES string.
+    """
+    Validate a SMILES string.
+    """
 
-        Returns
-        -------
-        bool
-            True if valid.
-        """
-        def validate_smiles(smiles: str) -> bool:
     if not smiles or not isinstance(smiles, str):
         raise ValueError("Invalid SMILES")
 
@@ -72,6 +67,7 @@ class MoleculeParser:
         return True
 
     return Chem.MolFromSmiles(smiles) is not None
+        
 
     @staticmethod
     def canonicalize(smiles: str) -> str:
