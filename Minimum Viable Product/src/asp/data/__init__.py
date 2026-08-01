@@ -1,4 +1,3 @@
-```python
 """
 Data management package for Autonomous Synthesis Planner.
 
@@ -22,4 +21,3 @@ __all__ = [
     "DataLoader",
     "TemplateRepository",
 ]
-```
