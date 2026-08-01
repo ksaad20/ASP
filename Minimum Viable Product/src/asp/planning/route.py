@@ -1,11 +1,7 @@
 """
-Route domain model for Autonomous Synthesis Planner.
+Route representation for ASP.
 
-A Route represents a complete candidate synthesis pathway from available
-starting materials to a target molecule.
-
-The Route class is intentionally independent of the scoring and search
-algorithms so that it can be reused throughout the planning engine.
+Defines a retrosynthetic route returned by the planning engine.
 """
 
 from __future__ import annotations
@@ -13,137 +9,104 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
-from asp.chemistry import Molecule, Reaction
-
 
 @dataclass(slots=True)
 class Route:
     """
-    Represents a candidate synthesis route.
-
-    Parameters
-    ----------
-    target
-        Target molecule.
-
-    reactions
-        Ordered sequence of reactions.
-
-    score
-        Overall route score.
-
-    metadata
-        Optional user metadata.
+    Representation of a retrosynthetic route.
     """
 
-    target: Molecule
-
-    reactions: list[Reaction] = field(default_factory=list)
-
+    target: Any
+    steps: list[Any] = field(default_factory=list)
     score: float = 0.0
-
     metadata: dict[str, Any] = field(default_factory=dict)
 
     @property
-    def steps(self) -> int:
-        """Return the number of reaction steps."""
-        return len(self.reactions)
+    def step_count(self) -> int:
+        """
+        Return the number of steps.
+        """
+
+        return len(self.steps)
 
     @property
-    def reactants(self) -> list[Molecule]:
+    def is_empty(self) -> bool:
         """
-        Return all reactant molecules.
+        Whether the route contains any reactions.
         """
-        molecules: list[Molecule] = []
 
-        for reaction in self.reactions:
-            molecules.extend(reaction.reactants)
+        return self.step_count == 0
 
-        return molecules
-
-    @property
-    def products(self) -> list[Molecule]:
-        """
-        Return all product molecules.
-        """
-        molecules: list[Molecule] = []
-
-        for reaction in self.reactions:
-            molecules.extend(reaction.products)
-
-        return molecules
-
-    @property
-    def average_confidence(self) -> float:
-        """
-        Average reaction confidence.
-        """
-        if not self.reactions:
-            return 0.0
-
-        return (
-            sum(
-                reaction.confidence
-                for reaction in self.reactions
-            )
-            / len(self.reactions)
-        )
-
-    def add_reaction(
+    def add_step(
         self,
-        reaction: Reaction,
+        step: Any,
     ) -> None:
         """
-        Append a reaction to the route.
+        Append a reaction step.
         """
-        self.reactions.append(reaction)
 
-    def extend(
-        self,
-        reactions: list[Reaction],
-    ) -> None:
-        """
-        Append multiple reactions.
-        """
-        self.reactions.extend(reactions)
-
-    def copy(self) -> "Route":
-        """
-        Return a shallow copy of the route.
-        """
-        return Route(
-            target=self.target,
-            reactions=list(self.reactions),
-            score=self.score,
-            metadata=dict(self.metadata),
-        )
+        self.steps.append(step)
 
     def to_dict(self) -> dict[str, Any]:
         """
         Serialize the route.
         """
+
         return {
-            "target": self.target.to_dict(),
-            "steps": self.steps,
-            "score": self.score,
-            "average_confidence": self.average_confidence,
-            "reactions": [
-                reaction.to_dict()
-                for reaction in self.reactions
+            "target": getattr(
+                self.target,
+                "to_dict",
+                lambda: self.target,
+            )(),
+            "steps": [
+                getattr(
+                    step,
+                    "to_dict",
+                    lambda: step,
+                )()
+                for step in self.steps
             ],
+            "score": self.score,
             "metadata": self.metadata,
         }
 
+    @classmethod
+    def from_dict(
+        cls,
+        data: dict[str, Any],
+    ) -> "Route":
+        """
+        Construct a Route from a dictionary.
+        """
+
+        return cls(
+            target=data.get("target"),
+            steps=list(data.get("steps", [])),
+            score=float(data.get("score", 0.0)),
+            metadata=dict(data.get("metadata", {})),
+        )
+
     def __len__(self) -> int:
-        return self.steps
+        """
+        Return the number of steps.
+        """
+
+        return self.step_count
 
     def __iter__(self):
-        return iter(self.reactions)
+        """
+        Iterate over route steps.
+        """
+
+        return iter(self.steps)
 
     def __repr__(self) -> str:
+        """
+        Return a concise representation.
+        """
+
         return (
             "Route("
-            f"target={self.target!s}, "
-            f"steps={self.steps}, "
+            f"steps={self.step_count}, "
             f"score={self.score:.3f})"
         )
