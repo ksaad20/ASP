@@ -1,4 +1,3 @@
-```python id="e7r9mc"
 """
 Data export utilities for Autonomous Synthesis Planner.
 
@@ -131,5 +130,3 @@ class DataExporter:
             format_name.lower()
             in DataExporter.supported_formats()
         )
-```
-
