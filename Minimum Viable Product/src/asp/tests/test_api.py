@@ -13,6 +13,8 @@ import pytest
 
 from asp.api import ASP, plan
 
+# nosec B101
+
 
 def test_api_initialization():
     """
