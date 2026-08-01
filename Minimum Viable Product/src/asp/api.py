@@ -9,103 +9,53 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from asp.io.export import DataExporter
 from asp.planning.planner import Planner
+from asp.planning.result import PlanningResult
 
 
 class ASP:
     """
     Main Autonomous Synthesis Planner interface.
-
-    Provides a simple entry point for users who want to
-    interact with ASP programmatically.
     """
-    
-def __init__(self) -> None:
+
+    def __init__(self) -> None:
         """Initialize ASP."""
 
-        self.template_count: int = 0
+        self.template_count = 0
 
-def plan(self, target: str) -> Planner:
+    def plan(self, target: str) -> PlanningResult:
         """
-        Create a synthesis planner for a target molecule.
-
-        Parameters
-        ----------
-        target:
-            Target molecule representation.
-
-        Returns
-        -------
-        Planner
-            Configured synthesis planner.
+        Generate a synthesis plan for a target molecule.
         """
 
         planner = Planner()
-        planner.target = target
-        return planner
+        return planner.plan(target)
 
-def load_templates(self, path: Path | str) -> None:
+    def load_templates(self, path: Path | str) -> None:
         """
         Load synthesis templates.
-
-        Parameters
-        ----------
-        path:
-            Path to the template file.
         """
 
         _ = Path(path)
         self.template_count += 1
 
+    def export(
+        self,
+        result: PlanningResult,
+        path: Path | str,
+    ) -> object:
+        """
+        Export a planning result.
+        """
 
-def plan(target: str) -> Planner:
+        exporter = DataExporter()
+        return exporter.export(result, path)
+
+
+def plan(target: str) -> PlanningResult:
     """
-    Create a synthesis planner.
-
-    Parameters
-    ----------
-    target:
-        Target molecule representation.
-
-    Returns
-    -------
-    Planner
-        Configured synthesis planner.
-    """
-
-    planner = Planner()
-    planner.target = target
-    return planner.plan(target)
-
-def export(self, result: object, path: Path | str) -> object:
-    """
-    Export a planning result.
-
-    Parameters
-    ----------
-    result:
-        Planning result to export.
-
-    path:
-        Output file path.
-
-    Returns
-    -------
-    object
-        Export result from the exporter.
+    Convenience function for generating a synthesis plan.
     """
 
-    from asp.io.export import DataExporter
-
-    exporter = DataExporter()
-    return exporter.export(result, path) 
-
- def export(self, result: object, path: Path | str) -> object:
-    """
-    Export a planning result.
-    """
-
-    from asp.io.export import DataExporter
-
-    exporter = DataExporter()
-    return exporter.export(result, path)
+    return ASP().plan(target)
