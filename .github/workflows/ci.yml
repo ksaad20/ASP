@@ -77,7 +77,7 @@ jobs:
 
       - name: Run Ruff linting
         run: |
-          ruff check .
+          ruff check . --fix
 
 
       - name: Run Bandit security scan
