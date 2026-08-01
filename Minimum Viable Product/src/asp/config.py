@@ -1,4 +1,3 @@
-```python
 """
 Configuration management for Autonomous Synthesis Planner.
 """
@@ -83,5 +82,3 @@ class AppConfig(BaseModel):
 
 
 DEFAULT_CONFIG = AppConfig()
-```
-
