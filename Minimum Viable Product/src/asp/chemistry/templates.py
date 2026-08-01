@@ -1,4 +1,3 @@
-```python
 """
 Reaction template definitions for Autonomous Synthesis Planner.
 
@@ -153,5 +152,3 @@ class ReactionTemplate:
             f"priority={self.priority}"
             ")"
         )
-```
-
