@@ -1,5 +1,9 @@
 """
-SMILES parsing utilities.
+Molecule parsing utilities for ASP.
+
+Provides validation and parsing of SMILES strings with optional
+RDKit support. When RDKit is unavailable, only basic validation
+is performed.
 """
 
 from __future__ import annotations
@@ -36,11 +40,50 @@ class ParsedMolecule:
             "name": self.name,
         }
 
+    @classmethod
+    def from_dict(
+        cls,
+        data: dict[str, str | bool | None],
+    ) -> "ParsedMolecule":
+        """
+        Construct a ParsedMolecule from a dictionary.
+        """
+
+        return cls(
+            smiles=str(data["smiles"]),
+            valid=bool(data["valid"]),
+            name=data.get("name"),
+        )
+
 
 class MoleculeParser:
     """
     Parser for molecular representations.
     """
+
+    @staticmethod
+    def validate(smiles: str) -> bool:
+        """
+        Validate a SMILES string.
+
+        Raises
+        ------
+        ValueError
+            If the input is invalid.
+        """
+
+        if not isinstance(smiles, str):
+            raise ValueError("SMILES must be a string.")
+
+        smiles = smiles.strip()
+
+        if not smiles:
+            raise ValueError("SMILES cannot be empty.")
+
+        if not _RDKIT_AVAILABLE:
+            return True
+
+        return Chem.MolFromSmiles(smiles) is not None
 
     @classmethod
     def from_smiles(
@@ -50,29 +93,13 @@ class MoleculeParser:
         name: str | None = None,
     ) -> ParsedMolecule:
         """
-        Create a ParsedMolecule from a SMILES string.
+        Construct a ParsedMolecule from a SMILES string.
         """
 
         return cls().parse(
             smiles,
             name=name,
         )
-
-    def validate(
-        self,
-        smiles: str,
-    ) -> bool:
-        """
-        Validate a SMILES string.
-        """
-
-        if not isinstance(smiles, str) or not smiles.strip():
-            raise ValueError("Invalid SMILES.")
-
-        if not _RDKIT_AVAILABLE:
-            return True
-
-        return Chem.MolFromSmiles(smiles) is not None
 
     def parse(
         self,
@@ -82,15 +109,18 @@ class MoleculeParser:
     ) -> ParsedMolecule:
         """
         Parse a SMILES string.
+
+        Raises
+        ------
+        ValueError
+            If the SMILES string is invalid.
         """
 
-        valid = self.validate(smiles)
-
-        if not valid:
+        if not self.validate(smiles):
             raise ValueError("Invalid SMILES.")
 
         return ParsedMolecule(
-            smiles=smiles,
+            smiles=smiles.strip(),
             valid=True,
             name=name,
         )
@@ -101,7 +131,7 @@ def validate_smiles(smiles: str) -> bool:
     Validate a SMILES string.
     """
 
-    return MoleculeParser().validate(smiles)
+    return MoleculeParser.validate(smiles)
 
 
 def parse_smiles(
