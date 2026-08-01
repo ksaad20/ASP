@@ -1,4 +1,3 @@
-```python
 """
 Application-wide constants for Autonomous Synthesis Planner (ASP).
 
@@ -122,5 +121,3 @@ __all__ = [
     "OUTPUT_DIRECTORY",
     "CACHE_DIRECTORY",
 ]
-```
-
