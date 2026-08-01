@@ -1,16 +1,11 @@
+# Status
+
 ![CI Status](https://github.com/ksaad20/ASP/actions/workflows/ci.yml/badge.svg)
-## Status
-
 [![CI Status](https://github.com/ksaad20/ASP/actions/workflows/ci.yml/badge.svg)](https://github.com/ksaad20/ASP/actions/workflows/ci.yml)
-
 [![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://www.python.org/)
-
 [![License](https://img.shields.io/github/license/ksaad20/ASP)](https://github.com/ksaad20/ASP/blob/main/LICENSE)
-
 [![GitHub Issues](https://img.shields.io/github/issues/ksaad20/ASP)](https://github.com/ksaad20/ASP/issues)
-
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/ksaad20/ASP)](https://github.com/ksaad20/ASP/commits/main)
-
 [![Repository Size](https://img.shields.io/github/repo-size/ksaad20/ASP)](https://github.com/ksaad20/ASP)
 
 # Autonomous Synthesis Planner
