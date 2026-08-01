@@ -10,6 +10,8 @@ from __future__ import annotations
 from asp.chemistry import MoleculeParser
 from asp.planning import RetrosynthesisEngine
 
+# nosec B101
+
 
 def test_engine_initialization():
     """
