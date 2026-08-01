@@ -99,4 +99,3 @@ def serialize_molecule(molecule: ParsedMolecule) -> dict[str, object]:
         "smiles": molecule.smiles,
         "valid": molecule.valid,
     }
-```
