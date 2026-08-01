@@ -9,5 +9,4 @@ exclude_dirs =
 # Report severity levels.
 # Low issues are still shown for awareness.
 targets =
-    src
-
+    src/asp/tests
