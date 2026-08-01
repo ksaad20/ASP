@@ -1,4 +1,3 @@
-```python
 """
 Tests for molecular parsing functionality.
 
@@ -109,5 +108,4 @@ def test_multiple_molecule_parsing():
     ]
 
     assert len(molecules) == 3
-```
 
