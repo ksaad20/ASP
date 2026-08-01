@@ -1,4 +1,3 @@
-```python
 """
 Tests for route scoring functionality.
 
@@ -169,5 +168,4 @@ def test_empty_routes():
     scorer = RouteScorer()
 
     assert scorer.best([]) is None
-```
 
