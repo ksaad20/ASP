@@ -1,4 +1,3 @@
-```python
 """
 Route domain model for Autonomous Synthesis Planner.
 
@@ -148,5 +147,3 @@ class Route:
             f"steps={self.steps}, "
             f"score={self.score:.3f})"
         )
-```
-      
