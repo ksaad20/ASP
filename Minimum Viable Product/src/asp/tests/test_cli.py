@@ -1,4 +1,3 @@
-```python
 """
 Tests for the ASP command-line interface.
 
@@ -140,5 +139,4 @@ def test_cli_invalid_command():
     )
 
     assert result.exit_code != 0
-```
 
