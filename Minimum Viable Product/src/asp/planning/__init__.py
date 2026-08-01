@@ -1,4 +1,3 @@
-```python id="a8mk2r"
 """
 Planning package for Autonomous Synthesis Planner.
 
@@ -61,5 +60,3 @@ __all__ = [
     "SearchNode",
     "SearchTree",
 ]
-```
-
