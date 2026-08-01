@@ -72,7 +72,7 @@ jobs:
 
       - name: Formatting with Black
         run: |
-          black . --fix
+          black . 
 
 
       - name: Run Ruff linting
