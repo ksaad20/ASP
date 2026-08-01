@@ -32,7 +32,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: MVP
+        working-directory: Minimum Viable Product 
 
 
     steps:
@@ -57,7 +57,7 @@ jobs:
 
       - name: Install package
         run: |
-          pip install -e .
+          pip install -e ./Minimum Viable Product 
 
 
       - name: Install development dependencies
@@ -87,6 +87,7 @@ jobs:
 
       - name: Run test suite
         run: |
-          pytest \
-            --cov=asp \
-            --cov-report=term-missing
+          Minimum Viable Product \
+                          pytest \
+                           --cov=asp \
+                           --cov-report=term-missing
