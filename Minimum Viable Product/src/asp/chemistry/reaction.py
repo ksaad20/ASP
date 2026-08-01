@@ -1,4 +1,3 @@
-```python
 """
 Chemical reaction domain model.
 
@@ -203,5 +202,4 @@ class Reaction:
             f"confidence={self.confidence:.2f}"
             ")"
         )
-```
 
