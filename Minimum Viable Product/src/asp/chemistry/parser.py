@@ -64,13 +64,14 @@ class MoleculeParser:
         bool
             True if valid.
         """
-        if not smiles or not isinstance(smiles, str):
-    raise ValueError("Invalid SMILES")
+        def validate_smiles(smiles: str) -> bool:
+    if not smiles or not isinstance(smiles, str):
+        raise ValueError("Invalid SMILES")
 
-if not _RDKIT_AVAILABLE:
-    return True
+    if not _RDKIT_AVAILABLE:
+        return True
 
-return Chem.MolFromSmiles(smiles) is not None
+    return Chem.MolFromSmiles(smiles) is not None
 
     @staticmethod
     def canonicalize(smiles: str) -> str:
