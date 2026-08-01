@@ -1,4 +1,3 @@
-```python
 """
 Logging utilities for Autonomous Synthesis Planner.
 
@@ -129,5 +128,4 @@ __all__ = [
     "set_level",
     "silence_external_loggers",
 ]
-```
 
