@@ -1,4 +1,3 @@
-```python id="e2kp4n"
 """
 Data loading utilities for Autonomous Synthesis Planner.
 
@@ -184,5 +183,3 @@ class DataLoader:
             ]
 
         return files
-```
-
