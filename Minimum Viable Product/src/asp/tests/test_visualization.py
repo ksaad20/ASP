@@ -12,6 +12,8 @@ import pytest
 from asp.planning import Route
 from asp.visualization import RouteVisualizer
 
+# nosec B101
+
 
 class MockMolecule:
     """
