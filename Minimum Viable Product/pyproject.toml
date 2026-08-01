@@ -74,21 +74,6 @@ docs = [
     "mkdocs-material"
 ]
 
-- name: Build package
-  working-directory: "Minimum Viable Product"
-  run: |
-    python -m build
-
-- name: Check package
-  working-directory: "Minimum Viable Product"
-  run: |
-    twine check dist/*
-
-- name: Publish to PyPI
-  uses: pypa/gh-action-pypi-publish@release/v1
-  with:
-    packages-dir: "Minimum Viable Product/dist/"
-
 [project.scripts]
 
 asp = "asp.cli:app"
