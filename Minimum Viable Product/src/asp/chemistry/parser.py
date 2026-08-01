@@ -1,54 +1,57 @@
+```python
+"""
+SMILES parsing utilities for Autonomous Synthesis Planner.
+"""
+
 from __future__ import annotations
 
-from pathlib import Path
+from dataclasses import dataclass
 
 try:
     from rdkit import Chem
 
     _RDKIT_AVAILABLE = True
-except ImportError:  # pragma: no cover
+except ImportError:
     Chem = None
     _RDKIT_AVAILABLE = False
 
-from .molecule import Molecule
 
-
-class MoleculeParser:
+@dataclass
+class ParsedMolecule:
     """
-    Parser for molecular representations.
+    Parsed molecular representation.
 
-    The MVP currently supports SMILES. Additional formats such as
-    SDF, MOL, and InChI can be added in future releases.
+    Attributes
+    ----------
+    smiles:
+        Original SMILES string.
+    valid:
+        Whether the SMILES is valid.
     """
 
-    @staticmethod
-    def from_smiles(
-        smiles: str,
-        *,
-        name: str | None = None,
-    ) -> Molecule:
-        """
-        Parse a SMILES string.
+    smiles: str
+    valid: bool
 
-        Parameters
-        ----------
-        smiles
-            SMILES representation.
 
-        name
-            Optional molecule name.
+def validate_smiles(smiles: str) -> bool:
+    """
+    Validate a SMILES string.
 
-        Returns
-        -------
-        Molecule
-        """
-        return Molecule.from_smiles(
-            smiles=smiles,
-            name=name,
-        )
+    Parameters
+    ----------
+    smiles:
+        SMILES representation.
 
-    @staticmethod
-    def validate_smiles(smiles: str) -> bool:
+    Returns
+    -------
+    bool
+        True if valid.
+
+    Raises
+    ------
+    ValueError
+        If the input is empty or not a string.
+    """
 
     if not smiles or not isinstance(smiles, str):
         raise ValueError("Invalid SMILES")
@@ -57,66 +60,48 @@ class MoleculeParser:
         return True
 
     return Chem.MolFromSmiles(smiles) is not None
-        
 
-    @staticmethod
-    def canonicalize(smiles: str) -> str:
-        """
-        Return canonical SMILES.
-        """
-        if not _RDKIT_AVAILABLE:
-            return smiles
 
-        mol = Chem.MolFromSmiles(smiles)
+def parse_smiles(smiles: str) -> ParsedMolecule:
+    """
+    Parse a SMILES string.
 
-        if mol is None:
-            raise ValueError(
-                f"Invalid SMILES: {smiles}"
-            )
+    Parameters
+    ----------
+    smiles:
+        SMILES representation.
 
-        return Chem.MolToSmiles(
-            mol,
-            canonical=True,
-        )
+    Returns
+    -------
+    ParsedMolecule
+        Parsed molecule object.
+    """
 
-    @staticmethod
-    def from_file(
-        path: str | Path,
-    ) -> Molecule:
-        """
-        Load a molecule from a text file containing
-        a single SMILES string.
-        """
-        path = Path(path)
+    valid = validate_smiles(smiles)
 
-        smiles = path.read_text(
-            encoding="utf-8"
-        ).strip()
+    return ParsedMolecule(
+        smiles=smiles,
+        valid=valid,
+    )
 
-        return Molecule.from_smiles(
-            smiles=smiles,
-            name=path.stem,
-        )
 
-    @staticmethod
-    def parse_many(
-        smiles_list: list[str],
-    ) -> list[Molecule]:
-        """
-        Parse multiple SMILES strings.
-        """
-        return [
-            Molecule.from_smiles(smiles)
-            for smiles in smiles_list
-        ]
+def serialize_molecule(molecule: ParsedMolecule) -> dict[str, object]:
+    """
+    Serialize a parsed molecule.
 
-    @staticmethod
-    def is_supported(
-        format_name: str,
-    ) -> bool:
-        """
-        Check whether a molecular format is supported.
-        """
-        return format_name.lower() in {
-            "smiles",
-        }
+    Parameters
+    ----------
+    molecule:
+        Parsed molecule.
+
+    Returns
+    -------
+    dict
+        Serializable representation.
+    """
+
+    return {
+        "smiles": molecule.smiles,
+        "valid": molecule.valid,
+    }
+```
