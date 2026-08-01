@@ -1,152 +1,169 @@
 """
-Search infrastructure for Autonomous Synthesis Planner.
+Search tree data structures for ASP.
 
-This module defines the core search data structures used by the planning
-engine. The MVP provides a generic search tree abstraction that can support
-breadth-first search, depth-first search, beam search, and future heuristic
-search algorithms.
+Defines the search nodes and tree used during retrosynthetic
+planning.
 """
 
 from __future__ import annotations
 
-from collections import deque
+from collections.abc import Iterator
 from dataclasses import dataclass, field
-
-from asp.chemistry import Molecule
+from typing import Any
 
 
 @dataclass(slots=True)
 class SearchNode:
     """
-    A node in the retrosynthetic search tree.
-
-    Parameters
-    ----------
-    molecule
-        Target molecule represented by this node.
-
-    depth
-        Depth within the search tree.
-
-    score
-        Heuristic search score.
-
-    parent
-        Parent search node.
-
-    children
-        Expanded child nodes.
+    Node in the retrosynthetic search tree.
     """
 
-    molecule: Molecule
-
-    depth: int = 0
-
+    molecule: Any
+    parent: SearchNode | None = None
+    children: list[SearchNode] = field(default_factory=list)
     score: float = 0.0
-
-    parent: "SearchNode | None" = None
-
-    children: list["SearchNode"] = field(default_factory=list)
-
     expanded: bool = False
 
-    def add_child(
-        self,
-        child: "SearchNode",
-    ) -> None:
+    def add_child(self, child: SearchNode) -> None:
         """
         Add a child node.
         """
+
         child.parent = self
         self.children.append(child)
 
     @property
-    def is_leaf(self) -> bool:
-        """Return True if the node has no children."""
-        return len(self.children) == 0
+    def is_root(self) -> bool:
+        """
+        Whether this node is the root node.
+        """
+
+        return self.parent is None
 
     @property
-    def path(self) -> list["SearchNode"]:
+    def is_leaf(self) -> bool:
+        """
+        Whether this node is a leaf.
+        """
+
+        return not self.children
+
+    @property
+    def path(self) -> list[SearchNode]:
         """
         Return the path from the root node to this node.
         """
-        node = self
-        nodes: list[SearchNode] = []
+
+        node: SearchNode | None = self
+        path: list[SearchNode] = []
 
         while node is not None:
-            nodes.append(node)
+            path.append(node)
             node = node.parent
 
-        return list(reversed(nodes))
+        path.reverse()
+        return path
+
+    def __iter__(self) -> Iterator[SearchNode]:
+        """
+        Iterate over immediate children.
+        """
+
+        return iter(self.children)
 
 
+@dataclass(slots=True)
 class SearchTree:
     """
-    Search tree used during retrosynthetic planning.
+    Search tree used by the retrosynthesis engine.
     """
 
-    def __init__(
-        self,
-        root: Molecule,
-    ) -> None:
-        self.root = SearchNode(root)
+    root: SearchNode | None = None
 
-    def breadth_first(self):
+    def __post_init__(self) -> None:
         """
-        Breadth-first traversal.
+        Ensure a valid root exists.
         """
-        queue = deque([self.root])
 
-        while queue:
-            node = queue.popleft()
+        if self.root is None:
+            self.root = SearchNode(molecule=None)
 
-            yield node
+    def __iter__(self) -> Iterator[SearchNode]:
+        """
+        Iterate over the tree in depth-first order.
+        """
 
-            queue.extend(node.children)
+        yield from self.depth_first()
 
-    def depth_first(self):
+    def depth_first(self) -> Iterator[SearchNode]:
         """
         Depth-first traversal.
         """
-        stack = [self.root]
+
+        stack: list[SearchNode] = [self.root]
 
         while stack:
             node = stack.pop()
-
             yield node
-
             stack.extend(reversed(node.children))
 
+    def breadth_first(self) -> Iterator[SearchNode]:
+        """
+        Breadth-first traversal.
+        """
+
+        queue: list[SearchNode] = [self.root]
+
+        while queue:
+            node = queue.pop(0)
+            yield node
+            queue.extend(node.children)
+
+    @property
+    def size(self) -> int:
+        """
+        Return the number of nodes in the tree.
+        """
+
+        return sum(1 for _ in self.depth_first())
+
+    @property
     def leaves(self) -> list[SearchNode]:
         """
         Return all leaf nodes.
         """
+
         return [
             node
             for node in self.depth_first()
             if node.is_leaf
         ]
 
-    def size(self) -> int:
+    def add_root(self, molecule: Any) -> SearchNode:
         """
-        Total number of nodes.
+        Replace the root node.
         """
-        return sum(
-            1
-            for _ in self.depth_first()
-        )
 
-    def max_depth(self) -> int:
-        """
-        Maximum tree depth.
-        """
-        return max(
-            node.depth
-            for node in self.depth_first()
-        )
+        self.root = SearchNode(molecule=molecule)
+        return self.root
 
-    def __iter__(self):
+    def clear(self) -> None:
         """
-        Iterate depth-first.
+        Reset the search tree.
         """
-        return self.depth_first()
+
+        self.root = SearchNode(molecule=None)
+
+    def __len__(self) -> int:
+        """
+        Return the number of nodes.
+        """
+
+        return self.size
+
+    def __repr__(self) -> str:
+        """
+        Return a concise representation.
+        """
+
+        return f"SearchTree(nodes={self.size})"
