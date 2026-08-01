@@ -1,3 +1,5 @@
+![CI Status](https://github.com/ksaad20/ASP/actions/workflows/ci.yml/badge.svg)
+
 # Autonomous Synthesis Planner
 
 **An open-source software framework for autonomous synthesis planning, enabling AI-driven retrosynthesis, reaction prediction, synthesis route optimization, and reproducible computational chemistry workflows.**
