@@ -1,5 +1,7 @@
 """
 Export utilities for ASP.
+
+Provides serialization of planning results to JSON.
 """
 
 from __future__ import annotations
@@ -11,63 +13,91 @@ from typing import Any
 
 class DataExporter:
     """
-    Export ASP objects to disk.
+    Export planning results and other ASP objects.
     """
 
     def export(
         self,
-        result: Any,
+        obj: Any,
         path: str | Path,
     ) -> Path:
         """
-        Export a planning result.
+        Export an object to a JSON file.
 
         Parameters
         ----------
-        result:
+        obj
             Object to export.
 
-        path:
-            Output file.
+        path
+            Destination path.
 
         Returns
         -------
-        Path
-            Output path.
+        pathlib.Path
+            Path to the written file.
         """
 
-        output = Path(path)
-        output.parent.mkdir(parents=True, exist_ok=True)
-
-        if hasattr(result, "to_dict"):
-            data = result.to_dict()
-        elif hasattr(result, "__dict__"):
-            data = result.__dict__
-        else:
-            raise TypeError(
-                f"Unsupported export type: {type(result).__name__}",
-            )
-
-        output.write_text(
-            json.dumps(
-                data,
-                indent=2,
-                default=str,
-            ),
-            encoding="utf-8",
+        destination = Path(path)
+        destination.parent.mkdir(
+            parents=True,
+            exist_ok=True,
         )
 
-        return output
+        with destination.open(
+            "w",
+            encoding="utf-8",
+        ) as file:
+            json.dump(
+                self._serialize(obj),
+                file,
+                indent=2,
+                sort_keys=True,
+            )
 
-    def export_json(
+        return destination
+
+    def _serialize(
         self,
-        result: Any,
-        path: str | Path,
-    ) -> Path:
+        obj: Any,
+    ) -> Any:
         """
-        Export as JSON.
-
-        This is an alias for ``export``.
+        Convert an object into JSON-serializable data.
         """
 
-        return self.export(result, path)
+        if hasattr(obj, "to_dict"):
+            return obj.to_dict()
+
+        if isinstance(
+            obj,
+            dict,
+        ):
+            return {
+                key: self._serialize(value)
+                for key, value in obj.items()
+            }
+
+        if isinstance(
+            obj,
+            (
+                list,
+                tuple,
+            ),
+        ):
+            return [
+                self._serialize(item)
+                for item in obj
+            ]
+
+        if isinstance(
+            obj,
+            (
+                str,
+                int,
+                float,
+                bool,
+            ),
+        ) or obj is None:
+            return obj
+
+        return str(obj)
