@@ -91,3 +91,7 @@ def parse_smiles(smiles: str) -> ParsedMolecule:
     """
 
     return MoleculeParser().parse(smiles)
+
+@classmethod
+def from_smiles(cls, smiles: str):
+    return cls().parse(smiles)
