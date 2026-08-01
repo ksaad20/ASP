@@ -1,4 +1,3 @@
-```python
 """
 Public API for Autonomous Synthesis Planner (ASP).
 
@@ -77,4 +76,3 @@ def plan(target: str) -> Planner:
     planner = Planner()
     planner.target = target
     return planner
-```
