@@ -60,5 +60,3 @@ def plan(target: str) -> Planner:
     """
 
     return Planner(target)
-```
-
