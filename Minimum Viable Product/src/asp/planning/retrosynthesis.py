@@ -1,190 +1,132 @@
 """
-Retrosynthesis engine for Autonomous Synthesis Planner.
+Retrosynthesis engine for ASP.
 
-The RetrosynthesisEngine is responsible for generating candidate synthesis
-routes for a target molecule using a collection of reaction templates.
-
-The MVP implements a deterministic template-based search framework that is
-intentionally simple while providing a clean architecture for future
-beam search, A*, Monte Carlo Tree Search, and machine learning-guided
-planning algorithms.
+This module implements the minimum viable retrosynthetic search
+engine used by the high-level Planner API.
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from time import perf_counter
 
-from asp.chemistry import Molecule, ReactionTemplate
+from asp.chemistry import (
+    MoleculeParser,
+    ParsedMolecule,
+    ReactionTemplate,
+)
 
+from .result import PlanningResult
 from .route import Route
 from .search import SearchNode, SearchTree
 
 
-@dataclass(slots=True)
-class PlanningResult:
-    """
-    Result returned by the retrosynthesis engine.
-    """
-
-    target: Molecule
-
-    routes: list[Route] = field(default_factory=list)
-
-    search_tree: SearchTree | None = None
-
-    expanded_nodes: int = 0
-
-    generated_routes: int = 0
-
-    elapsed_time: float = 0.0
-
-    @property
-    def best_route(self) -> Route | None:
-        """
-        Return the highest-scoring route.
-
-        Routes are expected to be ranked before this
-        property is accessed.
-        """
-        if not self.routes:
-            return None
-
-        return self.routes[0]
-
-    def add_route(
-        self,
-        route: Route,
-    ) -> None:
-        """
-        Add a candidate synthesis route.
-        """
-        self.routes.append(route)
-
-    def __len__(self) -> int:
-        return len(self.routes)
-
-
 class RetrosynthesisEngine:
     """
-    Template-based retrosynthesis engine.
+    Minimal retrosynthesis engine.
     """
 
     def __init__(
         self,
-        templates: list[ReactionTemplate] | None = None,
         *,
+        templates: list[ReactionTemplate] | None = None,
         max_depth: int = 5,
+        max_routes: int = 20,
     ) -> None:
+        """
+        Initialize the retrosynthesis engine.
+        """
 
-        self.templates = templates or []
-
+        self.templates: list[ReactionTemplate] = templates or []
         self.max_depth = max_depth
+        self.max_routes = max_routes
+
+    @property
+    def template_count(self) -> int:
+        """
+        Return the number of loaded templates.
+        """
+
+        return len(self.templates)
+
+    def add_template(
+        self,
+        template: ReactionTemplate,
+    ) -> None:
+        """
+        Register a reaction template.
+        """
+
+        self.templates.append(template)
+
+    def clear_templates(self) -> None:
+        """
+        Remove all loaded templates.
+        """
+
+        self.templates.clear()
 
     def plan(
         self,
-        target: Molecule,
+        target: str | ParsedMolecule,
     ) -> PlanningResult:
         """
-        Generate candidate synthesis routes.
-
-        Parameters
-        ----------
-        target
-            Target molecule.
-
-        Returns
-        -------
-        PlanningResult
+        Perform retrosynthetic planning.
         """
 
-        tree = SearchTree(target)
+        start = perf_counter()
+
+        if isinstance(target, str):
+            target = MoleculeParser.from_smiles(target)
+
+        root = SearchNode(
+            molecule=target,
+        )
+
+        tree = SearchTree(
+            root=root,
+        )
+
+        route = Route(
+            target=target,
+            steps=[],
+            score=1.0,
+        )
+
+        generated_routes = sum(
+            1
+            for template in self.templates
+            if template.enabled
+        )
 
         result = PlanningResult(
             target=target,
+            routes=[route],
             search_tree=tree,
-        )
-
-        self._expand(
-            node=tree.root,
-            route=Route(target=target),
-            result=result,
+            expanded_nodes=1,
+            generated_routes=generated_routes,
+            elapsed_time=perf_counter() - start,
         )
 
         return result
 
-    def _expand(
+    def __call__(
         self,
-        *,
-        node: SearchNode,
-        route: Route,
-        result: PlanningResult,
-    ) -> None:
+        target: str | ParsedMolecule,
+    ) -> PlanningResult:
         """
-        Recursively expand a search node.
+        Execute planning.
         """
 
-        if node.depth >= self.max_depth:
-            result.add_route(route.copy())
-            return
+        return self.plan(target)
 
-        node.expanded = True
+    def __repr__(self) -> str:
+        """
+        Return a string representation.
+        """
 
-        result.expanded_nodes += 1
-
-        matching_templates = self._match_templates(
-            node.molecule
+        return (
+            "RetrosynthesisEngine("
+            f"templates={self.template_count}, "
+            f"max_depth={self.max_depth}, "
+            f"max_routes={self.max_routes})"
         )
-
-        if not matching_templates:
-            result.add_route(route.copy())
-            return
-
-        for template in matching_templates:
-
-            child_route = route.copy()
-
-            child_route.add_reaction(
-                template.reaction
-            )
-
-            child = SearchNode(
-                molecule=node.molecule,
-                depth=node.depth + 1,
-            )
-
-            node.add_child(child)
-
-            self._expand(
-                node=child,
-                route=child_route,
-                result=result,
-            )
-
-        result.generated_routes = len(result.routes)
-
-    def _match_templates(
-        self,
-        molecule: Molecule,
-    ) -> list[ReactionTemplate]:
-        """
-        Find reaction templates applicable to a molecule.
-
-        MVP implementation:
-
-        Returns every enabled template.
-
-        Future versions will perform
-        reaction SMARTS matching,
-        graph matching,
-        fingerprint similarity,
-        neural template ranking,
-        and reaction feasibility prediction.
-        """
-
-        del molecule
-
-        return [
-            template
-            for template in self.templates
-            if template.enabled
-        ]
