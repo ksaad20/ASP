@@ -1,34 +1,28 @@
 """
-Chemistry module for Autonomous Synthesis Planner.
+Chemistry module for the Autonomous Synthesis Planner (ASP).
 
-This package provides the core chemical abstractions used throughout the
-planning engine, including molecular representations, reaction models,
-parsers, and reaction templates.
-
-Modules
--------
-molecule
-    Molecular data structures.
-
-parser
-    Molecular parsing and validation.
-
-reaction
-    Chemical reaction representations.
-
-templates
-    Reaction template management.
+This package provides molecular representations, reaction
+representations, reaction templates, and parsing utilities.
 """
 
+from __future__ import annotations
+
 from .molecule import Molecule
-from .parser import MoleculeParser
+from .parser import (
+    MoleculeParser,
+    ParsedMolecule,
+    parse_smiles,
+    validate_smiles,
+)
 from .reaction import Reaction
 from .templates import ReactionTemplate
 
 __all__ = [
     "Molecule",
+    "ParsedMolecule",
     "MoleculeParser",
+    "parse_smiles",
+    "validate_smiles",
     "Reaction",
     "ReactionTemplate",
 ]
-
