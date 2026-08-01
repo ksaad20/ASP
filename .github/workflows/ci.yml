@@ -32,7 +32,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: Minimum Viable Product 
+        working-directory: MVP
 
 
     steps:
@@ -87,7 +87,7 @@ jobs:
 
       - name: Run test suite
         run: |
-          Minimum Viable Product \
-                          pytest \
-                           --cov=asp \
-                           --cov-report=term-missing
+          MVP \
+            pytest \
+               --cov=asp \
+               --cov-report=term-missing
