@@ -98,4 +98,14 @@ def export(self, result: object, path: Path | str) -> object:
     from asp.io.export import DataExporter
 
     exporter = DataExporter()
+    return exporter.export(result, path) 
+
+ def export(self, result: object, path: Path | str) -> object:
+    """
+    Export a planning result.
+    """
+
+    from asp.io.export import DataExporter
+
+    exporter = DataExporter()
     return exporter.export(result, path)
