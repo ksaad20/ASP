@@ -57,7 +57,7 @@ jobs:
 
       - name: Install package
         run: |
-          pip install -e ./Minimum Viable Product 
+          pip install -e ./Minimum_Viable_Product 
 
 
       - name: Install development dependencies
