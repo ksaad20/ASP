@@ -1,4 +1,3 @@
-```python
 """
 Route optimization for Autonomous Synthesis Planner.
 
@@ -138,5 +137,3 @@ class RouteOptimizer:
         """
 
         return self.optimize(routes)
-```
-
