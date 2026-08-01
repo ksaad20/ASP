@@ -152,3 +152,28 @@ class ReactionTemplate:
             f"priority={self.priority}"
             ")"
         )
+
+@dataclass
+class ReactionTemplate:
+    """
+    Representation of a reusable reaction template.
+    """
+
+    reaction: Reaction
+    name: str = "unnamed"
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_reaction(
+        cls,
+        reaction: Reaction,
+        **kwargs: Any,
+    ) -> ReactionTemplate:
+        """
+        Create a template from a reaction.
+        """
+
+        return cls(
+            reaction=reaction,
+            metadata=kwargs,
+        )
