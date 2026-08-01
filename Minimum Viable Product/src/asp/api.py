@@ -19,13 +19,13 @@ class ASP:
     Provides a simple entry point for users who want to
     interact with ASP programmatically.
     """
-
-    def __init__(self) -> None:
+    
+def __init__(self) -> None:
         """Initialize ASP."""
 
         self.template_count: int = 0
 
-    def plan(self, target: str) -> Planner:
+def plan(self, target: str) -> Planner:
         """
         Create a synthesis planner for a target molecule.
 
@@ -44,7 +44,7 @@ class ASP:
         planner.target = target
         return planner
 
-    def load_templates(self, path: Path | str) -> None:
+def load_templates(self, path: Path | str) -> None:
         """
         Load synthesis templates.
 
