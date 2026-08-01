@@ -1,4 +1,3 @@
-```python
 """
 Core molecular representation for Autonomous Synthesis Planner.
 
@@ -171,5 +170,4 @@ class Molecule:
             f"smiles='{self.canonical_smiles}', "
             f"name={self.name!r})"
         )
-```
 
