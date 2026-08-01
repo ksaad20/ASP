@@ -1,4 +1,3 @@
-```python
 """
 Validation utilities for Autonomous Synthesis Planner.
 
@@ -170,5 +169,4 @@ __all__ = [
     "require_valid_identifier",
     "require_positive_integer",
 ]
-```
 
