@@ -1,4 +1,3 @@
-```python
 """
 Ibuprofen synthesis planning example.
 
@@ -122,4 +121,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-```
