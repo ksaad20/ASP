@@ -1,4 +1,3 @@
-```python
 """
 Data import utilities for Autonomous Synthesis Planner.
 
@@ -125,5 +124,3 @@ class DataImporter:
             "smiles",
             "reaction_smiles",
         )
-```
-
