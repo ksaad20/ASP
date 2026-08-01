@@ -91,30 +91,17 @@ class ReactionTemplate:
             "metadata": self.metadata,
         }
 
-    @classmethod
-    def from_reaction(
-        cls,
-        identifier: str,
-        name: str,
-        reaction: Reaction,
-        **kwargs: Any,
-    ) -> "ReactionTemplate":
-        """
-        Construct a template from an existing reaction.
-        """
-        return cls(
-            identifier=identifier,
-            name=name,
-            reaction=reaction,
-            **kwargs,
-        )
+@classmethod
+def from_reaction(
+    cls,
+    reaction: Reaction,
+    **kwargs: Any,
+) -> ReactionTemplate:
+    """
+    Create a template from a reaction.
+    """
 
-    def __repr__(self) -> str:
-        return (
-            "ReactionTemplate("
-            f"identifier='{self.identifier}', "
-            f"name='{self.name}', "
-            f"category='{self.category}', "
-            f"priority={self.priority}"
-            ")"
-        )
+    return cls(
+        reaction=reaction,
+        metadata=kwargs,
+    )
