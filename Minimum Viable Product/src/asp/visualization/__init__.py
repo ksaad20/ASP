@@ -1,4 +1,3 @@
-```python
 """
 Visualization package for Autonomous Synthesis Planner.
 
@@ -20,5 +19,3 @@ from .routes import RouteVisualizer
 __all__ = [
     "RouteVisualizer",
 ]
-```
-
