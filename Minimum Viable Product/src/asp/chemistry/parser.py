@@ -1,9 +1,9 @@
 """
 Molecule parsing utilities for ASP.
 
-Provides validation and parsing of SMILES strings with optional
-RDKit support. When RDKit is unavailable, only basic validation
-is performed.
+Provides lightweight SMILES parsing with optional RDKit
+validation and a fallback implementation for environments
+where RDKit is unavailable.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ try:
     from rdkit import Chem
 
     _RDKIT_AVAILABLE = True
-except ImportError:
+except ImportError:  # pragma: no cover
     Chem = None
     _RDKIT_AVAILABLE = False
 
@@ -29,7 +29,7 @@ class ParsedMolecule:
     valid: bool
     name: str | None = None
 
-    def to_dict(self) -> dict[str, str | bool | None]:
+    def to_dict(self) -> dict[str, object]:
         """
         Serialize the molecule.
         """
@@ -40,21 +40,6 @@ class ParsedMolecule:
             "name": self.name,
         }
 
-    @classmethod
-    def from_dict(
-        cls,
-        data: dict[str, str | bool | None],
-    ) -> "ParsedMolecule":
-        """
-        Construct a ParsedMolecule from a dictionary.
-        """
-
-        return cls(
-            smiles=str(data["smiles"]),
-            valid=bool(data["valid"]),
-            name=data.get("name"),
-        )
-
 
 class MoleculeParser:
     """
@@ -62,71 +47,82 @@ class MoleculeParser:
     """
 
     @staticmethod
-    def validate(smiles: str) -> bool:
+    def validate(
+        smiles: str,
+    ) -> bool:
         """
         Validate a SMILES string.
 
         Raises
         ------
         ValueError
-            If the input is invalid.
+            If the input is empty or not a string.
         """
 
         if not isinstance(smiles, str):
-            raise ValueError("SMILES must be a string.")
+            raise ValueError("Invalid SMILES.")
 
         smiles = smiles.strip()
 
         if not smiles:
-            raise ValueError("SMILES cannot be empty.")
+            raise ValueError("Invalid SMILES.")
 
-        if not _RDKIT_AVAILABLE:
-            return True
+        if _RDKIT_AVAILABLE:
+            return Chem.MolFromSmiles(smiles) is not None
 
-        return Chem.MolFromSmiles(smiles) is not None
+        #
+        # Lightweight fallback validation.
+        #
+        allowed = set(
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz"
+            "0123456789"
+            "()[]=#@+-/\\."
+        )
+
+        return all(char in allowed for char in smiles)
 
     @classmethod
     def from_smiles(
         cls,
         smiles: str,
-        *,
         name: str | None = None,
     ) -> ParsedMolecule:
         """
         Construct a ParsedMolecule from a SMILES string.
         """
 
-        return cls().parse(
-            smiles,
+        parser = cls()
+
+        valid = parser.validate(smiles)
+
+        if not valid:
+            raise ValueError("Invalid SMILES.")
+
+        return ParsedMolecule(
+            smiles=smiles,
+            valid=True,
             name=name,
         )
 
     def parse(
         self,
         smiles: str,
-        *,
         name: str | None = None,
     ) -> ParsedMolecule:
         """
         Parse a SMILES string.
-
-        Raises
-        ------
-        ValueError
-            If the SMILES string is invalid.
         """
 
-        if not self.validate(smiles):
-            raise ValueError("Invalid SMILES.")
-
-        return ParsedMolecule(
-            smiles=smiles.strip(),
-            valid=True,
+        return self.from_smiles(
+            smiles=smiles,
             name=name,
         )
 
 
-def validate_smiles(smiles: str) -> bool:
+def validate_smiles(
+    smiles: str,
+) -> bool:
     """
     Validate a SMILES string.
     """
@@ -136,7 +132,6 @@ def validate_smiles(smiles: str) -> bool:
 
 def parse_smiles(
     smiles: str,
-    *,
     name: str | None = None,
 ) -> ParsedMolecule:
     """
@@ -144,6 +139,6 @@ def parse_smiles(
     """
 
     return MoleculeParser.from_smiles(
-        smiles,
+        smiles=smiles,
         name=name,
     )
