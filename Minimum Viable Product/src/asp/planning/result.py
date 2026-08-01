@@ -1,4 +1,3 @@
-```python
 """
 Planning result models for Autonomous Synthesis Planner.
 
@@ -154,5 +153,3 @@ class PlanningResult:
             f"routes={self.route_count}, "
             f"successful={self.successful})"
         )
-```
-
