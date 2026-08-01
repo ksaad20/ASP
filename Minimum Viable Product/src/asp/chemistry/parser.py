@@ -1,5 +1,5 @@
 """
-SMILES parsing utilities for Autonomous Synthesis Planner.
+SMILES parsing utilities.
 """
 
 from __future__ import annotations
@@ -23,45 +23,77 @@ class ParsedMolecule:
 
     smiles: str
     valid: bool
+    name: str | None = None
+
+    def to_dict(self) -> dict[str, str | bool | None]:
+        """
+        Serialize the molecule.
+        """
+
+        return {
+            "smiles": self.smiles,
+            "valid": self.valid,
+            "name": self.name,
+        }
 
 
 class MoleculeParser:
     """
     Parser for molecular representations.
-
-    Provides SMILES validation and parsing functionality.
     """
 
-    def validate(self, smiles: str) -> bool:
+    @classmethod
+    def from_smiles(
+        cls,
+        smiles: str,
+        *,
+        name: str | None = None,
+    ) -> ParsedMolecule:
+        """
+        Create a ParsedMolecule from a SMILES string.
+        """
+
+        return cls().parse(
+            smiles,
+            name=name,
+        )
+
+    def validate(
+        self,
+        smiles: str,
+    ) -> bool:
         """
         Validate a SMILES string.
         """
 
-        if not smiles or not isinstance(smiles, str):
-            raise ValueError("Invalid SMILES")
+        if not isinstance(smiles, str) or not smiles.strip():
+            raise ValueError("Invalid SMILES.")
 
         if not _RDKIT_AVAILABLE:
             return True
 
         return Chem.MolFromSmiles(smiles) is not None
 
-    def parse(self, smiles: str) -> ParsedMolecule:
+    def parse(
+        self,
+        smiles: str,
+        *,
+        name: str | None = None,
+    ) -> ParsedMolecule:
         """
         Parse a SMILES string.
         """
 
+        valid = self.validate(smiles)
+
+        if not valid:
+            raise ValueError("Invalid SMILES.")
+
         return ParsedMolecule(
             smiles=smiles,
-            valid=self.validate(smiles),
+            valid=True,
+            name=name,
         )
-
-    @classmethod
-    def from_smiles(cls, smiles: str) -> ParsedMolecule:
-        """
-        Construct a molecule from a SMILES string.
-        """
-
-        return cls().parse(smiles)
 
 
 def validate_smiles(smiles: str) -> bool:
@@ -72,9 +104,16 @@ def validate_smiles(smiles: str) -> bool:
     return MoleculeParser().validate(smiles)
 
 
-def parse_smiles(smiles: str) -> ParsedMolecule:
+def parse_smiles(
+    smiles: str,
+    *,
+    name: str | None = None,
+) -> ParsedMolecule:
     """
     Parse a SMILES string.
     """
 
-    return MoleculeParser().parse(smiles)
+    return MoleculeParser.from_smiles(
+        smiles,
+        name=name,
+    )
