@@ -1,4 +1,3 @@
-```python
 """
 Autonomous Synthesis Planner (ASP)
 
@@ -39,5 +38,3 @@ __all__ = [
     "Planner",
     "__version__",
 ]
-```
-
