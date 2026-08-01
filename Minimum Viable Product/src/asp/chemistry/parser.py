@@ -55,8 +55,9 @@ class MoleculeParser:
             return True
 
         return Chem.MolFromSmiles(smiles) is not None
-        @classmethod
-def from_smiles(cls, smiles: str) -> ParsedMolecule:
+        
+    @classmethod
+    def from_smiles(cls, smiles: str) -> ParsedMolecule:
     """
     Create a molecule from a SMILES string.
     """
