@@ -17,53 +17,30 @@ from typing import Any
 from .reaction import Reaction
 
 
-@dataclass(slots=True)
+@dataclass
 class ReactionTemplate:
     """
-    Represents a reusable reaction template.
-
-    Parameters
-    ----------
-    identifier
-        Unique template identifier.
-
-    name
-        Human-readable template name.
-
-    reaction
-        Representative reaction implementing the transformation.
-
-    category
-        Reaction category (e.g. oxidation, reduction).
-
-    description
-        Optional description.
-
-    priority
-        Relative template priority.
-
-    enabled
-        Whether the template is active.
-
-    metadata
-        Additional user-defined metadata.
+    Representation of a reusable reaction template.
     """
 
-    identifier: str
-
-    name: str
-
     reaction: Reaction
-
-    category: str = "general"
-
-    description: str = ""
-
-    priority: int = 100
-
-    enabled: bool = True
-
+    name: str = "unnamed"
     metadata: dict[str, Any] = field(default_factory=dict)
+
+    @classmethod
+    def from_reaction(
+        cls,
+        reaction: Reaction,
+        **kwargs: Any,
+    ) -> ReactionTemplate:
+        """
+        Create a template from a reaction.
+        """
+
+        return cls(
+            reaction=reaction,
+            metadata=kwargs,
+        )
 
     def __post_init__(self) -> None:
         """Validate template fields."""
@@ -151,29 +128,4 @@ class ReactionTemplate:
             f"category='{self.category}', "
             f"priority={self.priority}"
             ")"
-        )
-
-@dataclass
-class ReactionTemplate:
-    """
-    Representation of a reusable reaction template.
-    """
-
-    reaction: Reaction
-    name: str = "unnamed"
-    metadata: dict[str, Any] = field(default_factory=dict)
-
-    @classmethod
-    def from_reaction(
-        cls,
-        reaction: Reaction,
-        **kwargs: Any,
-    ) -> ReactionTemplate:
-        """
-        Create a template from a reaction.
-        """
-
-        return cls(
-            reaction=reaction,
-            metadata=kwargs,
         )
