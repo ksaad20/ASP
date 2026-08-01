@@ -1,4 +1,3 @@
-```python
 """
 Chemistry module for Autonomous Synthesis Planner.
 
@@ -32,5 +31,4 @@ __all__ = [
     "Reaction",
     "ReactionTemplate",
 ]
-```
 
