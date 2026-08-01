@@ -1,14 +1,3 @@
-"""
-Reaction template definitions for Autonomous Synthesis Planner.
-
-This module provides the ReactionTemplate class, which encapsulates reusable
-reaction transformation rules used by the retrosynthesis engine.
-
-In the MVP, templates are lightweight metadata objects. Future versions can
-extend them to support SMARTS-based reaction transformations, learned reaction
-templates, and template prioritization.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
