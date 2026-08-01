@@ -1,4 +1,3 @@
-```python id="7mq8rx"
 """
 Synthesis route visualization for Autonomous Synthesis Planner.
 
@@ -215,5 +214,4 @@ class RouteVisualizer:
         """
 
         return self._graph
-```
   
