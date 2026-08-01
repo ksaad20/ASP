@@ -10,3 +10,6 @@ exclude_dirs =
 # Low issues are still shown for awareness.
 targets =
     src/asp/tests
+
+[bandit]
+skips = B101
