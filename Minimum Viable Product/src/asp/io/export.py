@@ -1,7 +1,8 @@
 """
 Export utilities for ASP.
 
-Provides serialization of planning results to JSON.
+Provides serialization helpers for planning results and
+other ASP objects.
 """
 
 from __future__ import annotations
@@ -13,7 +14,7 @@ from typing import Any
 
 class DataExporter:
     """
-    Export planning results and other ASP objects.
+    Export ASP objects to disk.
     """
 
     def export(
@@ -22,20 +23,20 @@ class DataExporter:
         path: str | Path,
     ) -> Path:
         """
-        Export an object to a JSON file.
+        Export an object to JSON.
 
         Parameters
         ----------
-        obj
+        obj:
             Object to export.
 
-        path
-            Destination path.
+        path:
+            Destination file.
 
         Returns
         -------
         pathlib.Path
-            Path to the written file.
+            Written file path.
         """
 
         destination = Path(path)
@@ -47,43 +48,52 @@ class DataExporter:
         with destination.open(
             "w",
             encoding="utf-8",
-        ) as file:
+        ) as handle:
             json.dump(
                 self._serialize(obj),
-                file,
+                handle,
                 indent=2,
                 sort_keys=True,
             )
 
         return destination
 
+    @classmethod
+    def json(
+        cls,
+        obj: Any,
+        path: str | Path,
+    ) -> Path:
+        """
+        Export an object as JSON.
+
+        This convenience method exists for compatibility
+        with the ASP CLI.
+        """
+
+        return cls().export(
+            obj=obj,
+            path=path,
+        )
+
     def _serialize(
         self,
         obj: Any,
     ) -> Any:
         """
-        Convert an object into JSON-serializable data.
+        Convert an object into JSON-compatible data.
         """
 
         if hasattr(obj, "to_dict"):
             return obj.to_dict()
 
-        if isinstance(
-            obj,
-            dict,
-        ):
+        if isinstance(obj, dict):
             return {
                 key: self._serialize(value)
                 for key, value in obj.items()
             }
 
-        if isinstance(
-            obj,
-            (
-                list,
-                tuple,
-            ),
-        ):
+        if isinstance(obj, (list, tuple)):
             return [
                 self._serialize(item)
                 for item in obj
