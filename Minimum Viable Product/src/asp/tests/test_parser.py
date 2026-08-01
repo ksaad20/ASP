@@ -13,6 +13,8 @@ from asp.chemistry import (
     MoleculeParser,
 )
 
+# nosec B101
+
 
 def test_parse_valid_smiles():
     """
