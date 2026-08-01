@@ -1,4 +1,3 @@
-```python
 """
 Tests for the retrosynthesis engine.
 
@@ -130,5 +129,4 @@ def test_template_expansion():
         result.generated_routes
         >= 0
     )
-```
 
