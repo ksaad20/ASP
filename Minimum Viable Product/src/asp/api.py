@@ -1,4 +1,3 @@
-```python
 """
 Public API for Autonomous Synthesis Planner (ASP).
 
